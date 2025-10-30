@@ -1,0 +1,213 @@
+% Beamer deck: Midterm Research Plan (plan-based, English only, 12 slides)
+\documentclass[aspectratio=169,11pt]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+% ---- Footline: title + date + frame numbers (NO author) ----
+\makeatletter
+\setbeamertemplate{footline}{%
+	\leavevmode%
+	\hbox{%
+		\begin{beamercolorbox}[wd=.62\paperwidth,ht=2.25ex,dp=1ex,leftskip=2ex]{title in head/foot}%
+			\usebeamerfont{title in head/foot}\insertshorttitle
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=.38\paperwidth,ht=2.25ex,dp=1ex,rightskip=2ex]{date in head/foot}%
+			\usebeamerfont{date in head/foot}\insertshortdate{}\hspace{1em}%
+			\insertframenumber{} / \inserttotalframenumber
+		\end{beamercolorbox}%
+	}%
+	\vskip0pt%
+}
+\makeatother
+
+% ---- Meta ----
+\title[Employment \& Unemployment (Baidu Index \& Baike)]%
+{Midterm Research Plan: Employment \& Unemployment (Baidu Index \& Baidu Encyclopedia)}
+\author{Team Name} % kept for title slide; footline template excludes author
+\institute{Course: Data Science and AI}
+\date[Oct 30, 2025]{Oct 30, 2025}
+
+\begin{document}
+	
+	% 1) Title
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	% 2) Executive Summary (from plan)
+	\begin{frame}{Executive Summary}
+		\small
+		\textbf{Aim:} Use Baidu Index (search interest) and Baidu Encyclopedia to identify employment market trends, influencing factors, and potential patterns. \\
+		\textbf{Scope:} China, past five years (2019--2025). \\
+		\textbf{Deliverables:} Clean datasets, descriptive analytics, and clear visuals.
+		\medskip
+		
+		\textbf{Pipeline}
+		\begin{itemize}
+			\item Data Collection (Baidu Index \& Baidu Encyclopedia)
+			\item Data Cleaning (completeness, missingness, duplicates, outliers, formatting)
+			\item Descriptive Analysis (distribution, correlation, trends)
+			\item Visualization (time trends, regional comparisons, correlations)
+			\item Conclusions \& Outlook
+		\end{itemize}
+	\end{frame}
+	
+	% 3) Research Background and Objectives
+	\begin{frame}{1. Research Background and Objectives}
+		\small
+		\textbf{Background:} Employment and unemployment are core issues affecting social stability and economic development. \\
+		\textbf{Objective:} Use Baidu Index and Baidu Encyclopedia to identify employment-market trends, influencing factors, and potential patterns.
+		\medskip
+		
+		\textbf{Key questions}
+		\begin{itemize}
+			\item What do search-interest dynamics reveal about temporal and regional variations?
+			\item How do related concepts (e.g., unemployment rate, job hunting) co-move?
+			\item Which policy topics or definitions appear most frequently in encyclopedia entries?
+		\end{itemize}
+	\end{frame}
+	
+	% 4) Data Collection — Baidu Index
+	\begin{frame}{2. Data Collection — 2.1 Baidu Index}
+		\small
+		\textbf{Keywords:} Select terms related to “employment” and “unemployment” (e.g., “job hunting”, “unemployment rate”). \\
+		\textbf{Method:} Use Baidu Index self-service collection tools to set the time window (e.g., past 5 years) and regional scope, then export search index data.
+		\medskip
+		
+		\textbf{Expected fields}
+		\begin{itemize}
+			\item \texttt{date}, \texttt{region}, \texttt{keyword}
+			\item \texttt{search\_index\_total}, \texttt{pc\_index}, \texttt{mobile\_index}
+			\item frequency (daily/weekly), notes
+		\end{itemize}
+		\textbf{Coverage:} National and major provinces.
+	\end{frame}
+	
+	% 5) Data Collection — Baidu Encyclopedia
+	\begin{frame}{2. Data Collection — 2.2 Baidu Encyclopedia}
+		\small
+		\textbf{Targets:} Entries like “employment policies” and “unemployment types.” \\
+		\textbf{Extraction:} Policy details, industry employment data, unemployment causes.
+		\medskip
+		
+		\textbf{Typical fields}
+		\begin{itemize}
+			\item entry title, abstract, section text
+			\item key dates (publication/revision), policy highlights
+			\item target groups, administrative level, references, URL
+		\end{itemize}
+		\textbf{Method:} Web scraping with standard HTML parsing; store as structured JSON.
+	\end{frame}
+	
+	% 6) Data Cleaning (part 1)
+	\begin{frame}{3. Data Cleaning (Part 1)}
+		\small
+		\textbf{Initial Review:} Check data completeness and accuracy. \\
+		\textbf{Missing Values:} Fill with mean/linear interpolation, or delete invalid entries; clearly flag imputed points. \\
+		\textbf{Duplicates:} Remove repeated records and keep an audit trail.
+		\medskip
+		
+		\textbf{Outputs}
+		\begin{itemize}
+			\item Cleaned index table(s) aligned by date, region, and keyword
+			\item Structured encyclopedia table(s) for downstream analysis
+		\end{itemize}
+	\end{frame}
+	
+	% 7) Data Cleaning (part 2)
+	\begin{frame}{3. Data Cleaning (Part 2)}
+		\small
+		\textbf{Outliers:} Identify and handle via \(3\sigma\) rule, IQR fences, or boxplot indicators. \\
+		\textbf{Format Conversion:} Standardize date and numeric formats; ensure ISO-8601 dates, normalized region names/codes.
+		\medskip
+		
+		\textbf{Quality flags}
+		\begin{itemize}
+			\item \texttt{impute\_flag}, \texttt{outlier\_flag}, \texttt{source\_note}
+			\item reproducible scripts/notebooks with deterministic results
+		\end{itemize}
+	\end{frame}
+	
+	% 8) Descriptive Analysis — Distribution
+	\begin{frame}{4. Descriptive Analysis — Distribution}
+		\small
+		\textbf{Goal:} Analyze distributions across regions and time to find central tendencies and dispersion.
+		\medskip
+		
+		\textbf{Examples}
+		\begin{itemize}
+			\item Regional boxplots/violin plots for key keywords
+			\item Temporal distribution summaries (by month/quarter/year)
+			\item Heatmaps of average index levels or coefficients of variation
+		\end{itemize}
+	\end{frame}
+	
+	% 9) Descriptive Analysis — Correlation
+	\begin{frame}{4. Descriptive Analysis — Correlation}
+		\small
+		\textbf{Goal:} Explore links between employment/unemployment search data and economic factors (e.g., GDP), and among related keywords.
+		\medskip
+		
+		\textbf{Examples}
+		\begin{itemize}
+			\item Correlation matrices (Pearson/Spearman)
+			\item Scatter plots with trend lines for pairs (e.g., unemployment-related vs. job-hunting terms)
+			\item (If available) simple alignment with macro indicators for context
+		\end{itemize}
+	\end{frame}
+	
+	% 10) Descriptive Analysis — Trends
+	\begin{frame}{4. Descriptive Analysis — Trends}
+		\small
+		\textbf{Goal:} Use time-series analysis to observe changes and discuss short-term trend signals.
+		\medskip
+		
+		\textbf{Examples}
+		\begin{itemize}
+			\item Line charts of keyword indices with moving averages
+			\item Seasonal/holiday/graduation-season annotations
+			\item Optional: STL decomposition or simple change-point diagnostics (descriptive)
+		\end{itemize}
+	\end{frame}
+	
+	% 11) Data Visualization
+	\begin{frame}{5. Data Visualization}
+		\small
+		\textbf{Tools:} Python (Matplotlib, Seaborn) or BI tools (e.g., FineBI). \\
+		\textbf{Charts:} Line charts for time trends, bar charts for regional comparisons, scatter plots for correlations.
+		\medskip
+		
+		\textbf{Design guidelines}
+		\begin{itemize}
+			\item Consistent color/labeling; all figures include source \& study window
+			\item Clear legends and annotations; readable fonts for classroom screens
+			\item Keep code cells reproducible and parameterized
+		\end{itemize}
+	\end{frame}
+	
+	% 12) Conclusions & Outlook
+	\begin{frame}{6. Conclusions and Outlook}
+		\small
+		\textbf{Conclusions}
+		\begin{itemize}
+			\item Summarize key findings from distribution, correlation, and trend analyses.
+			\item Highlight data-driven value for employment research using search-interest proxies.
+		\end{itemize}
+		\textbf{Outlook}
+		\begin{itemize}
+			\item Expand data sources (e.g., social media posts, job postings).
+			\item Consider short-term forecasting or deeper policy-event comparisons as next steps.
+		\end{itemize}
+	\end{frame}
+	
+\end{document}
