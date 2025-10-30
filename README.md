@@ -1,7 +1,7 @@
 # teamwork
 # We choose Project B - Social Media Data Acquisition and Descriptive Analysis
 ## subject :Insights into Employment and Unemployment from Data​
-## team member : Chenxi Zhang,Haowen Shi,Haomin Zhou
+## team member : Chenxi Zhang, Haowen Shi, Haotian Zhou
 # Our Plan
 1. Research Background and Objectives​
 Employment and unemployment are core issues affecting social stability and economic development. This study uses data from Baidu Index and Baidu Encyclopedia to identify employment market trends, influencing factors, and potential patterns.​
