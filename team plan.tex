@@ -31,9 +31,9 @@
 % ---- Meta ----
 \title[Employment \& Unemployment (Baidu Index \& Baike)]%
 {Midterm Research Plan: Employment \& Unemployment (Baidu Index \& Baidu Encyclopedia)}
-\author{Chenxi Zhang, Haowen Shi, Haotian Zhou} % kept for title slide; footline template excludes author
+\author{Chenxi Zhang, Haowen Shi, Haotian Zhou}
 \institute{Course: Data Science and AI}
-\date[Oct 30, 2025]{Oct 30, 2025}
+\date[Nov 27, 2025]{Nov 27, 2025}
 
 \begin{document}
 	
@@ -42,7 +42,7 @@
 		\titlepage
 	\end{frame}
 	
-	% 2) Executive Summary (from plan)
+	% 2) Executive Summary
 	\begin{frame}{Executive Summary}
 		\small
 		\textbf{Aim:} Use Baidu Index (search interest) and Baidu Encyclopedia to identify employment market trends, influencing factors, and potential patterns. \\
@@ -53,14 +53,31 @@
 		\textbf{Pipeline}
 		\begin{itemize}
 			\item Data Collection (Baidu Index \& Baidu Encyclopedia)
-			\item Data Cleaning (completeness, missingness, duplicates, outliers, formatting)
+			\item Data Cleaning (completeness, missingness, duplicates, outliers)
 			\item Descriptive Analysis (distribution, correlation, trends)
 			\item Visualization (time trends, regional comparisons, correlations)
 			\item Conclusions \& Outlook
 		\end{itemize}
 	\end{frame}
 	
-	% 3) Research Background and Objectives
+	% 3) Motivation / Significance
+	\begin{frame}{0. Motivation and Significance}
+		\small
+		\textbf{Why search data?}
+		\begin{itemize}
+			\item Search interest provides a high-frequency proxy for public concern and job-market sentiment.
+			\item Compared to official statistics (monthly/quarterly), it reacts faster to shocks and policy events.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Practical value}
+		\begin{itemize}
+			\item Early-warning signals of labor-market stress (graduation season, layoffs, policy shifts).
+			\item Support regional employment monitoring and policy evaluation.
+		\end{itemize}
+	\end{frame}
+	
+	% 4) Research Background and Objectives
 	\begin{frame}{1. Research Background and Objectives}
 		\small
 		\textbf{Background:} Employment and unemployment are core issues affecting social stability and economic development. \\
@@ -75,11 +92,29 @@
 		\end{itemize}
 	\end{frame}
 	
-	% 4) Data Collection — Baidu Index
+	% 5) Related Work / Contribution
+	\begin{frame}{1.1 Related Work and Our Contribution}
+		\small
+		\textbf{Prior evidence}
+		\begin{itemize}
+			\item Search data has been used to nowcast macro variables (consumption, finance, epidemics).
+			\item Labor-market studies show online attention correlates with job-search intensity.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Our contribution}
+		\begin{itemize}
+			\item Combine \textit{Index (behavior)} + \textit{Baike (definition/policy text)}.
+			\item Provide interpretable descriptive results by region/keyword/event.
+			\item Build a reproducible dataset pipeline for future forecasting extensions.
+		\end{itemize}
+	\end{frame}
+	
+	% 6) Data Collection — Baidu Index
 	\begin{frame}{2. Data Collection — 2.1 Baidu Index}
 		\small
 		\textbf{Keywords:} Select terms related to “employment” and “unemployment” (e.g., “job hunting”, “unemployment rate”). \\
-		\textbf{Method:} Use Baidu Index self-service collection tools to set the time window (e.g., past 5 years) and regional scope, then export search index data.
+		\textbf{Method:} Use Baidu Index self-service tools to set time window and regional scope, then export data.
 		\medskip
 		
 		\textbf{Expected fields}
@@ -91,7 +126,26 @@
 		\textbf{Coverage:} National and major provinces.
 	\end{frame}
 	
-	% 5) Data Collection — Baidu Encyclopedia
+	% 7) Keyword Strategy
+	\begin{frame}{2.1.1 Keyword Selection Strategy}
+		\small
+		\textbf{Principles}
+		\begin{itemize}
+			\item \textbf{Coverage:} include both outcome terms (``unemployment'') and behavior terms (``job hunting'').
+			\item \textbf{Specificity:} avoid overly broad words; prefer policy/market-relevant phrases.
+			\item \textbf{Robustness:} add synonyms and colloquial variants to reduce wording bias.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Candidate buckets}
+		\begin{itemize}
+			\item Employment: ``employment'', ``recruitment'', ``campus hiring'', ``graduate jobs''
+			\item Unemployment: ``unemployment'', ``unemployment rate'', ``layoff'', ``jobless''
+			\item Job-search behavior: ``job hunting'', ``resume'', ``interview'', ``offer''
+		\end{itemize}
+	\end{frame}
+	
+	% 8) Data Collection — Baidu Encyclopedia
 	\begin{frame}{2. Data Collection — 2.2 Baidu Encyclopedia}
 		\small
 		\textbf{Targets:} Entries like “employment policies” and “unemployment types.” \\
@@ -107,11 +161,35 @@
 		\textbf{Method:} Web scraping with standard HTML parsing; store as structured JSON.
 	\end{frame}
 	
-	% 6) Data Cleaning (part 1)
+	% 9) Text Processing Plan
+	\begin{frame}{2.2.1 Baike Text Processing Plan}
+		\small
+		\textbf{Goals}
+		\begin{itemize}
+			\item Extract policy/definition themes and their evolution over time.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Planned steps}
+		\begin{itemize}
+			\item Cleaning: remove boilerplate, unify punctuation, Chinese tokenization.
+			\item Keyword/phrase mining: TF-IDF or simple frequency counts.
+			\item Topic sketching (descriptive): cluster sections by similarity to find theme groups.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Output}
+		\begin{itemize}
+			\item Policy-topic frequency table by year.
+			\item Co-occurrence network of policy terms (descriptive).
+		\end{itemize}
+	\end{frame}
+	
+	% 10) Data Cleaning (part 1)
 	\begin{frame}{3. Data Cleaning (Part 1)}
 		\small
 		\textbf{Initial Review:} Check data completeness and accuracy. \\
-		\textbf{Missing Values:} Fill with mean/linear interpolation, or delete invalid entries; clearly flag imputed points. \\
+		\textbf{Missing Values:} Fill with mean/linear interpolation, or delete invalid entries; flag imputed points. \\
 		\textbf{Duplicates:} Remove repeated records and keep an audit trail.
 		\medskip
 		
@@ -122,11 +200,11 @@
 		\end{itemize}
 	\end{frame}
 	
-	% 7) Data Cleaning (part 2)
+	% 11) Data Cleaning (part 2)
 	\begin{frame}{3. Data Cleaning (Part 2)}
 		\small
-		\textbf{Outliers:} Identify and handle via \(3\sigma\) rule, IQR fences, or boxplot indicators. \\
-		\textbf{Format Conversion:} Standardize date and numeric formats; ensure ISO-8601 dates, normalized region names/codes.
+		\textbf{Outliers:} Identify via \(3\sigma\), IQR fences, or boxplot indicators. \\
+		\textbf{Format Conversion:} Standardize date/numeric formats; ISO-8601 dates, normalized region codes.
 		\medskip
 		
 		\textbf{Quality flags}
@@ -136,7 +214,7 @@
 		\end{itemize}
 	\end{frame}
 	
-	% 8) Descriptive Analysis — Distribution
+	% 12) Descriptive Analysis — Distribution
 	\begin{frame}{4. Descriptive Analysis — Distribution}
 		\small
 		\textbf{Goal:} Analyze distributions across regions and time to find central tendencies and dispersion.
@@ -150,61 +228,152 @@
 		\end{itemize}
 	\end{frame}
 	
-	% 9) Descriptive Analysis — Correlation
+	% 13) Descriptive Analysis — Correlation
 	\begin{frame}{4. Descriptive Analysis — Correlation}
 		\small
-		\textbf{Goal:} Explore links between employment/unemployment search data and economic factors (e.g., GDP), and among related keywords.
+		\textbf{Goal:} Explore links between employment/unemployment search data and economic factors, and among related keywords.
 		\medskip
 		
 		\textbf{Examples}
 		\begin{itemize}
 			\item Correlation matrices (Pearson/Spearman)
-			\item Scatter plots with trend lines for pairs (e.g., unemployment-related vs. job-hunting terms)
-			\item (If available) simple alignment with macro indicators for context
+			\item Scatter plots with trend lines (e.g., ``layoff'' vs ``job hunting'')
+			\item Optional alignment with macro indicators (GDP, CPI, youth unemployment)
 		\end{itemize}
 	\end{frame}
 	
-	% 10) Descriptive Analysis — Trends
+	% 14) Descriptive Analysis — Trends
 	\begin{frame}{4. Descriptive Analysis — Trends}
 		\small
-		\textbf{Goal:} Use time-series analysis to observe changes and discuss short-term trend signals.
+		\textbf{Goal:} Use time-series views to observe changes and discuss short-term signals.
 		\medskip
 		
 		\textbf{Examples}
 		\begin{itemize}
 			\item Line charts of keyword indices with moving averages
 			\item Seasonal/holiday/graduation-season annotations
-			\item Optional: STL decomposition or simple change-point diagnostics (descriptive)
+			\item Descriptive STL decomposition or change-point checks
 		\end{itemize}
 	\end{frame}
 	
-	% 11) Data Visualization
+	% 15) Event Annotation / External Context
+	\begin{frame}{4.1 Event Annotation and External Context}
+		\small
+		\textbf{Why annotate events?}
+		\begin{itemize}
+			\item Peaks are often driven by real-world shocks or policies.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Planned annotations}
+		\begin{itemize}
+			\item Graduation seasons (Jun--Jul annually)
+			\item Major policy releases (employment support, labor market reforms)
+			\item Macro shocks (COVID waves, large-scale layoffs, tech/real estate cycles)
+		\end{itemize}
+		\medskip
+		
+		\textbf{Use}
+		\begin{itemize}
+			\item Compare pre/post-event search levels; describe regional heterogeneity.
+		\end{itemize}
+	\end{frame}
+	
+	% 16) Visualization
 	\begin{frame}{5. Data Visualization}
 		\small
 		\textbf{Tools:} Python (Matplotlib, Seaborn) or BI tools (e.g., FineBI). \\
-		\textbf{Charts:} Line charts for time trends, bar charts for regional comparisons, scatter plots for correlations.
+		\textbf{Charts:} Line charts, bar charts, scatter plots, heatmaps, co-occurrence networks.
 		\medskip
 		
 		\textbf{Design guidelines}
 		\begin{itemize}
-			\item Consistent color/labeling; all figures include source \& study window
-			\item Clear legends and annotations; readable fonts for classroom screens
-			\item Keep code cells reproducible and parameterized
+			\item Consistent labels; figures include source \& study window
+			\item Clear legends/annotations; readable fonts for classroom screens
+			\item Reproducible and parameterized code
 		\end{itemize}
 	\end{frame}
 	
-	% 12) Conclusions & Outlook
-	\begin{frame}{6. Conclusions and Outlook}
+	% 17) Robustness / Limitations
+	\begin{frame}{5.1 Robustness and Limitations}
 		\small
-		\textbf{Conclusions}
+		\textbf{Robustness checks (descriptive)}
 		\begin{itemize}
-			\item Summarize key findings from distribution, correlation, and trend analyses.
-			\item Highlight data-driven value for employment research using search-interest proxies.
+			\item Compare multiple synonyms to confirm consistent patterns.
+			\item PC vs Mobile split to see user-group differences.
+			\item Smoothing sensitivity (MA window length).
 		\end{itemize}
+		\medskip
+		
+		\textbf{Limitations}
+		\begin{itemize}
+			\item Search data is attention, not necessarily real employment outcomes.
+			\item Media/viral events may cause temporary spikes.
+			\item Baike entries may have editorial lag or incomplete regional detail.
+		\end{itemize}
+	\end{frame}
+	
+	% 18) Timeline
+	\begin{frame}{6. Project Timeline (Next 4--5 Weeks)}
+		\small
+		\begin{itemize}
+			\item \textbf{Week 1:} finalize keyword list; collect Index \& Baike data; build raw database.
+			\item \textbf{Week 2:} cleaning pipeline; missing/outlier handling; unify region codes.
+			\item \textbf{Week 3:} descriptive analysis (distribution/correlation/trends); event annotations.
+			\item \textbf{Week 4:} visualization polishing; interpret results; draft report/slides.
+			\item \textbf{Week 5 (if time):} optional extension: simple forecasting / policy comparison.
+		\end{itemize}
+	\end{frame}
+	
+	% 19) Team Roles
+	\begin{frame}{6.1 Team Roles and Work Allocation}
+		\small
+		\begin{itemize}
+			\item \textbf{Chenxi Zhang:} Baidu Index keyword design; data export; regional comparison analysis.
+			\item \textbf{Haowen Shi:} scraping/structuring Baike text; text mining + topic sketches.
+			\item \textbf{Haotian Zhou:} cleaning scripts; time-series visualization; robustness checks.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Collaboration}
+		\begin{itemize}
+			\item shared Git repo; weekly merge + clear data/version logs.
+		\end{itemize}
+	\end{frame}
+	
+	% 20) Risk & Mitigation
+	\begin{frame}{6.2 Risks and Mitigation}
+		\small
+		\textbf{Potential risks}
+		\begin{itemize}
+			\item Data access limits / missing regions.
+			\item Changes in Baidu Index export rules.
+			\item Baike pages with inconsistent templates.
+		\end{itemize}
+		\medskip
+		
+		\textbf{Mitigation}
+		\begin{itemize}
+			\item Backup keyword sets; cache raw HTML locally.
+			\item Use modular scrapers; log failures and retry.
+			\item Fall back to partial-region analysis with clear caveats.
+		\end{itemize}
+	\end{frame}
+	
+	% 21) Conclusions & Outlook
+	\begin{frame}{7. Conclusions and Outlook}
+		\small
+		\textbf{Expected conclusions}
+		\begin{itemize}
+			\item Summarize distribution/correlation/trend signals by keyword and region.
+			\item Highlight data-driven value of search-interest proxies for labor-market research.
+		\end{itemize}
+		\medskip
+		
 		\textbf{Outlook}
 		\begin{itemize}
-			\item Expand data sources (e.g., social media posts, job postings).
-			\item Consider short-term forecasting or deeper policy-event comparisons as next steps.
+			\item Expand sources (social media, job-posting platforms).
+			\item Add short-term forecasting or deeper policy-event causal comparisons.
 		\end{itemize}
 	\end{frame}
 	
