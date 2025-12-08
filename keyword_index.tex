@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\usepackage{hyperref}
+\title{基于网络搜索关键词的劳动力市场状况综合指数构造方法}
+\author{（作者 / 机构）}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{方法论 (Methodology)}
+
+\subsection*{子维度 (Sub-domains) 与关键词设计}
+
+我们将“劳动力市场状况 / 就业-失业压力 /就业结构性变化”等复杂社会经济现象拆解为四个子维度 (sub-domains)：  
+\begin{enumerate}
+  \item 求职活跃度 (Job-search \& Hiring Demand)  
+  \item 就业困难 / 就业压力 (Employment Difficulty / Uncertainty)  
+  \item 失业 / 裁员 / 再就业压力 (Unemployment \& Layoff Pressure)  
+  \item 结构性／弱势群体就业压力 (Structural / Precarious Employment Stress)  
+\end{enumerate}
+
+对应每个子维度，我们选取如下关键词 (keyword list)，用于网络搜索量／搜索指数的爬取与统计 (以中文为例)：  
+
+\begin{itemize}
+  \item \textbf{求职活跃度}：找工作, 招聘, 求职, 招聘信息, 校招, 春招, 秋招, 面试, 简历  
+  \item \textbf{就业困难／压力}：就业难, 找工作难, 应届生就业, 应届生找工作, 就业形势, 就业前景, 行业前景, 薪资水平, 薪资查询, 大学生就业, 毕业生就业  
+  \item \textbf{失业／裁员压力}：失业, 裁员, 裁员潮, 被裁, 优化, 失业金, 失业保险, 失业补助, 失业登记, 再就业, 低门槛工作, 临时工, 兼职, 蓝领招聘  
+  \item \textbf{结构性／弱势群体压力}：35岁就业, 35岁找工作, 中年就业, 蓝领招聘, 低学历就业, 外卖骑手, 快递员, 送外卖, 兼职, 临时工, 底层劳动岗位  
+\end{itemize}
+
+\subsection*{数据标准化 (Normalization)}
+
+由于不同关键词组的搜索量／指数 (原始数值) 存在量纲差异或分布差异，我们首先对每个子指标 (keyword group) 进行标准化处理 (normalization / standardization)。常用方法包括：  
+\begin{itemize}
+  \item Z-score 标准化：将原始数值转化为均值为 0、标准差为 1 的标准尺度  
+  \item Min–Max 归一化 (Normalization to [0,1] 或 [0,100])：将数值线性映射到统一区间  
+\end{itemize}
+
+\subsection*{子指数 (Sub-index) 构造}
+
+对于每个子维度 (sub-domain)，将该维度下所有标准化后的子指标按加权平均 (或简单平均) 聚合 (aggregation)，得到该维度对应的子指数 (sub-index)：
+
+\[
+  \text{subindex}_d(t) = \sum_{i \in d} w_i \cdot z_i(t)
+\]
+
+其中 \(w_i\) 为子指标 i 的权重 (如等权重或自定义权重)，\(z_i(t)\) 为其标准化值。
+
+如果希望强调各子指标之间不应互相完全补偿 (compensation) 的情况 (例如“失业压力 + 结构性就业压力”)，也可以使用非补偿 (non-compensatory) 聚合方法。例如 $$\text{Mazziotta–Pareto Index (MPI / AMPI)}$$，对各标准化子指标的均值与变异性 (heterogeneity) 引入惩罚 (penalty)，以反映 “不均衡 / 高风险 / 高压力” 的状态更为严重。  [oai_citation:4‡Wikipedia](https://en.wikipedia.org/wiki/Mazziotta%E2%80%93Pareto_index?utm_source=chatgpt.com)
+
+\subsection*{总体综合指数 (Composite Index) 构造}
+
+将所有子维度 (sub-index) 再进行标准化 + 聚合 (weighted average 或 MPI 等方法)，得到总体 “劳动力市场状况 / 就业-失业压力综合指数 (Labour Market Composite Index)”：
+
+\[
+  \text{CompositeIndex}(t) = \sum_{d} W_d \cdot \text{subindex}_d(t)
+\]
+
+或采用 non-compensatory 聚合 (如 MPI)：
+
+\[
+  \text{CompositeIndex}(t) = \text{MPI}(\text{subindex}_1(t), \text{subindex}_2(t), \dots )
+\]
+
+其中 \(W_d\) 为各子维度 d 的权重 (如等权重或经验/理论设定)；若无明确依据，建议先使用等权重 (equal weights)。
+
+\subsection*{时间序列分析 \& 趋势识别}
+
+构造完子指数和综合指数后，可以对其进行时间序列分析 (trend / seasonality / shock detection)，例如考察指数随时间 (月 / 季 / 年) 的变化趋势、周期性 (如毕业季、年初 / 年末周期)、异常值 (经济冲击、裁员潮) 等。
+
+\subsection*{敏感性分析与稳健性测试 (Robustness Check)}
+
+为了检验指数构造方法与结果的稳健性，应当：  
+\begin{itemize}
+  \item 尝试不同标准化方法 (Z-score vs Min–Max)  
+  \item 尝试不同聚合方法 (线性加权 vs MPI / non-compensatory)  
+  \item 尝试不同权重设定 (等权重 vs 差异权重)  
+  \item 如可能，与传统 /官方 /第三方就业 /失业 /招聘 /裁员 /用人单位数据对照 (validation / triangulation)，评估综合指数与现实就业市场状况的一致性  
+\end{itemize}
+
+\section*{讨论与局限}
+
+\begin{itemize}
+  \item 网络搜索关键词 / 搜索量只是“代理 (proxy)” — 它反映的是人们的“搜索行为 / 意愿 /关注度 /焦虑 /需求”，不一定等同于真实就业 /失业人数或岗位数量  
+  \item 搜索行为可能受新闻 /舆论 /热点事件干扰 (例如大规模裁员新闻、行业动荡、政策讨论) — 这种“情绪波动 /关注波动”可能并不对应真实劳动力市场结构性的变化  
+  \item 子指标选择 /权重 /聚合方法存在主观性 — 不同设定可能得出不同结论，因此敏感性分析 /稳健性检查非常重要  
+\end{itemize}
+
+\section*{结论}
+
+通过上述方法，我们可以将大量零散的关键词搜索数据，转化为系统、结构化、可量化的“劳动力市场状况 /就业-失业压力”综合指数 (以及各子维度子指数)，从而更及时、更敏感地追踪社会就业 /失业 /劳动力市场结构性变化 —— 为学术研究、政策分析、社会监测提供一种补充传统统计数据 (如就业率 /失业率 /招聘公告数) 的有力工具。
+
+\end{document}
